@@ -1,0 +1,7 @@
+npm install --save bcrypt body-parser concurrently cookie-parser express jsonwebtoken mongoose
+
+npx create-react-app .
+
+npm install --save axios react-cookies react-router-dom react-redux redux react-promise
+
+npm install --save react-fontawesome

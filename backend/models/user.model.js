@@ -67,23 +67,26 @@ userSchema.methods.comparePassword = function(candidatepassword, cb) {
     });
 }
 
-userSchema.methods.generateToken = function(cb) {
+userSchema.methods.generateToken = async function(cb) {
     let user = this;
     let token = jwt.sign(user._id.toHexString(), config.SECRET);
 
     // user.token = token;
-    user.updateOne({ token: token }, function(error, doc) {
-        if (error) {
-            return cb(error);
-        }
-        cb(null, user);
-    });
+    // user.updateOne({ token: token }, function(error, doc) {
+    //     if (error) {
+    //         return cb(error);
+    //     }
+    //     cb(null, user);
+    // });
+    user.token = token;
+    await user.updateOne({ token: token });
+    cb(null, user);
 }
 
 userSchema.statics.findByToken = function(token, cb){
     let user = this;
 
-    jwt.verify(token, config.SECRET, (error,decode) => {
+    jwt.verify(token, config.SECRET, (error, decode) => {
         user.findOne({"_id": decode, "token": token}, (error, user) => {
             if(error) {
                 return cb(error);

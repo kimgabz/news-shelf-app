@@ -1,5 +1,6 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
+import { connect } from 'react-redux';
 import FontAwesome from 'react-fontawesome';
 
 import { RouteLinks } from '../../../utils/routeLinks';
@@ -20,7 +21,12 @@ const Items = (props) => {
 
     const showLinks = () => (
         RouteLinks.common.map((item,i)=>{
-            return element(item,i)
+            if(props.user.auth && item.restricted){
+                return null
+            }
+            else {
+                return element(item,i)
+            }
         })
     )
 
@@ -33,14 +39,22 @@ const Items = (props) => {
     return (
         <div>
             { showLinks() }
-            <div>
-                <div className="nav_split">
-                    Admin options
+            { props.user.auth ?
+                <div>
+                    <div className="nav_split">
+                        Admin options
+                    </div>
+                    {showAdminLinks()}
                 </div>
-                {showAdminLinks()}
-            </div>
+            :null}
         </div>
     )
 }
 
-export default Items;
+function mapStateToProps(state){
+    return{
+        user:state.user
+    }
+}
+
+export default connect(mapStateToProps)(Items);

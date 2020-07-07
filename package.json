@@ -14,9 +14,9 @@
   },
   "devDependencies": {},
   "scripts": {
-    "start": "node server/index.js",
-    "server": "nodemon server/index.js",
-    "client": "npm run start --prefix client",
+    "start": "node backend/index.js",
+    "server": "nodemon backend/index.js",
+    "client": "npm run start --prefix frontend",
     "dev": "concurrently \"npm run server\" \"npm run client\""
   },
   "author": "",

@@ -7,3 +7,5 @@ npm install --save axios react-cookies react-router-dom react-redux redux redux-
 npm install --save react-fontawesome
 
 npm install --save redux-devtools-extension
+
+npm install --formik yup

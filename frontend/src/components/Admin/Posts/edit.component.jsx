@@ -1,73 +1,107 @@
 import React from 'react';
-import { connect } from 'react-redux';
-import {Link} from 'react-router-dom';
-
 import { Formik } from 'formik';
-
-import AdminLayout from '../../HOC/AdminLayout';
-import { NewsSchema, FormElement } from './posts.helper';
+import {Link} from 'react-router-dom';
+import { connect } from 'react-redux';
 
 // WYSIWYG
-import { EditorState } from 'draft-js';
+import { EditorState , ContentState } from 'draft-js';
+import htmlToDraft from 'html-to-draftjs';
 import { stateToHTML } from 'draft-js-export-html';
 import { Editor } from 'react-draft-wysiwyg';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 
-// Actions
-import { addNews, clearNews } from '../../../store/actions/news.action';
+import AdminLayout from '../../HOC/AdminLayout';
+import { NewsSchema, FormElement } from './posts.helper';
+import { editNews, clearNews, getNews } from '../../../store/actions/news.action';
 
-class AddPosts extends React.Component {
+class EditPost extends React.Component {
 
     state = {
-        editorState:EditorState.createEmpty(),
+        editorState:'',
         editorContentHtml:'',
-        success: false
+        success: false,
+        loading: true,
+        newsToEdit:{}
     }
 
     onEditorStateChange = (editorState) => {
         this.setState({
-            editorState,
-            editorContentHtml: stateToHTML(editorState.getCurrentContent())
-        })
+            editorState
+        });
     }
 
-    onPostNews = (values) => {
-        this.props.dispatch(addNews(values))
+    onEditNews = (values) => {
+       this.props.dispatch(editNews(values));
     }
 
     componentWillUnmount(){
         this.props.dispatch(clearNews());
     }
 
-    componentDidUpdate(prevProps){
-        const hasChanged = this.props.news !== prevProps.news
-        if(hasChanged){
+    componentDidMount(){
+       this.props.dispatch(getNews(this.props.match.params.id));
+    }
+
+    componentDidUpdate(prevProps) {
+        const hasChanged = this.props.news.single !== prevProps.news.single;
+        const hasUpdated = this.props.news.update !== prevProps.news.update;
+        const single = this.props.news.single;
+
+        if(hasUpdated){
             this.setState({success: true})
         }
+
+        if(hasChanged){
+            if(single !== false){
+                const blocksFromHtml = htmlToDraft(single.content);
+                const { contentBlocks, entityMap } = blocksFromHtml;
+                const contentState = ContentState.createFromBlockArray(contentBlocks, entityMap);
+
+                this.setState({
+                    loading:false,
+                    editorState: EditorState.createWithContent(contentState),
+                    newsToEdit:{
+                        _id: single._id,
+                        name: single.name,
+                        author: single.author,
+                        pages: single.pages,
+                        rating: single.rating,
+                        price: single.price
+                    }
+                })
+            } else {
+                this.props.history.push('/');
+            }
+        }
+
     }
 
     render() {
-        return(
+            return this.state.loading ?
+            <>Loading</>
+        :
             <AdminLayout>
                 <h4>Add a post</h4>
 
                 <Formik
-                    initialValues={{ name:'', author:'', pages:'', rating:'', price:'' }}
+                    enableReinitialize={true}
+                    initialValues={this.state.bookToEdit}
                     validationSchema={NewsSchema}
                     onSubmit={(values,{ resetForm })=>{
-                        this.onPostNews({
-                            ...values,
-                            content: this.state.editorContentHtml
-                        });
-                        this.setState({
-                            editorState:EditorState.createEmpty(),
-                            editorContentHtml:''
-                        })
-                        resetForm({});
+                       this.onEditBook({
+                        ...values,
+                        content: stateToHTML(this.state.editorState.getCurrentContent())
+                       })
                     }}
                 >
-                    { ({ values, errors, touched, handleChange, handleBlur, handleSubmit }) => (
+                    { ({ values, errors, touched, handleChange, handleBlur, handleSubmit })=>(
                         <form onSubmit={handleSubmit}>
+
+                            <input
+                                type="hidden"
+                                name="_id"
+                                value={values ? values._id : ''}
+                            />
 
                             <FormElement
                                 elData={{element:'input',type:'text', value:values.name }}
@@ -86,7 +120,7 @@ class AddPosts extends React.Component {
                                 editorClassName="demo-editor"
                             />
 
-                            <h4>News info</h4>
+                            <h4>Book info</h4>
 
                             <FormElement
                                 elData={{element:'input',type:'text', value:values.author }}
@@ -135,25 +169,24 @@ class AddPosts extends React.Component {
                             />
 
                             <button type="submit">
-                                Add news
+                                Update News
                             </button>
                             <br/>
                             {
                                 this.state.success ?
                                 <div className="succes_entry">
-                                    <div>Congrats !!!</div>
-                                    <Link to={`/article/${this.props.news.add.newsId}`}>
-                                        See your news article
+                                    <div>Update completed !!!</div>
+                                    <Link to={`/article/${this.props.news.update.doc._id}`}>
+                                        See your News article
                                     </Link>
                                 </div>
                                 :null
                             }
                         </form>
                     )}
-
                 </Formik>
+
             </AdminLayout>
-        )
     }
 }
 
@@ -163,4 +196,4 @@ function mapStateToProps(state){
     }
 }
 
-export default connect(mapStateToProps)(AddPosts);
+export default connect(mapStateToProps)(EditPost);

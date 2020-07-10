@@ -18,7 +18,7 @@ router.route('/news')
         }
         res.status(200).json({
             post:true,
-            bookId: doc._id
+            newsId: doc._id
         });
     });
 })

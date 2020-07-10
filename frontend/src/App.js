@@ -7,6 +7,7 @@ import Logout from './components/Users/logout';
 
 import Admin from './components/Admin/index';
 import AddPosts from './components/Admin/Posts/add.component';
+import EditPost from './components//Admin/Posts/edit.component';
 
 // HOC
 import MainLayout from './components/HOC/MainLayout';
@@ -17,6 +18,7 @@ function App() {
     <BrowserRouter>
       <MainLayout>
         <Switch>
+          <Route path="/admin/posts/edit/:id" component={Auth(EditPost,true)}/>
           <Route path="/admin/posts/create" component={Auth(AddPosts,true)}/>
           <Route path="/admin" component={ Auth(Admin, true) }/>
           <Route path="/logout" component={Auth(Logout, true)}/>

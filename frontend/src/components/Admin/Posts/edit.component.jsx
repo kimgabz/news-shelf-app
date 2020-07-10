@@ -85,7 +85,7 @@ class EditPost extends React.Component {
 
                 <Formik
                     enableReinitialize={true}
-                    initialValues={this.state.bookToEdit}
+                    initialValues={this.state.newsToEdit}
                     validationSchema={NewsSchema}
                     onSubmit={(values,{ resetForm })=>{
                        this.onEditBook({
@@ -191,6 +191,7 @@ class EditPost extends React.Component {
 }
 
 function mapStateToProps(state){
+    debugger;
     return {
         news: state.news
     }

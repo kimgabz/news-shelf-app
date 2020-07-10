@@ -8,4 +8,10 @@ npm install --save react-fontawesome
 
 npm install --save redux-devtools-extension
 
-npm install --formik yup
+npm install --save formik yup
+
+npm install --save react-simple-sidenav
+
+npm install --save react-draft-wysiwyg draft-js draft-js-export-html html-to-draftjs
+
+npm install --save @material-ui/core moment

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { NEWS_ADD, NEWS_CLEAR, NEWS_GET, NEWS_UPDATE } from '../types';
+import { NEWS_ADD, NEWS_CLEAR, NEWS_GET, NEWS_UPDATE, NEWS_GET_ALL } from '../types';
 
 export function addNews(values){
     const request = axios.post('/api/news/news', values)
@@ -13,7 +13,7 @@ export function clearNews(values){
 }
 
 export function editNews(values){
-    const request = axios.patch('/api/news/news',values)
+    const request = axios.put('/api/news/news',values)
                      .then( response => response.data )
  
     return { type: NEWS_UPDATE, payload: request };
@@ -29,4 +29,22 @@ const request = axios.get(`/api/news/news?id=${newsId}`)
                 })
 
     return { type: NEWS_GET, payload: request }
+}
+
+export function getNewsAll(
+    limit = 50,
+    start = 0,
+    order = 'asc',
+    list
+){
+
+    const request = axios.get(`/api/news/all?limit=${limit}&skip=${start}&order=${order}`)
+                    .then( response => {
+                        return list ? [...list,...response.data] : response.data;
+                    });
+
+        return {
+            type: NEWS_GET_ALL,
+            payload: request
+        }
 }

@@ -1,4 +1,4 @@
-import { NEWS_ADD, NEWS_CLEAR, NEWS_GET, NEWS_UPDATE } from '../types';
+import { NEWS_ADD, NEWS_CLEAR, NEWS_GET, NEWS_UPDATE, NEWS_GET_ALL } from '../types';
 
 export default function(state = {}, action){
     switch(action.type) {
@@ -14,6 +14,8 @@ export default function(state = {}, action){
             return {...state, single: action.payload }
         case NEWS_UPDATE:
             return {...state, update: action.payload }
+        case NEWS_GET_ALL:
+            return {...state, collection: action.payload }
         default:
             return state;
     }

@@ -36,7 +36,7 @@ router.route('/news')
         res.send(...doc);
     });
 })
-.put(auth, (req, res)=>{
+.put(auth, (req, res)=> {
     News.findByIdAndUpdate(req.body._id, req.body, { new: true }, (error, doc)=>{
         if(error) {
             return res.status(400).send(error);

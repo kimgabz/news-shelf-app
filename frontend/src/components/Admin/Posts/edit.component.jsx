@@ -77,121 +77,120 @@ class EditPost extends React.Component {
     }
 
     render() {
-            return this.state.loading ?
-            <>Loading</>
+        return this.state.loading ?
+        <>Loading</>
         :
-            <AdminLayout>
-                <h4>Add a post</h4>
+        <AdminLayout>
+            <h4>Add a post</h4>
 
-                <Formik
-                    enableReinitialize={true}
-                    initialValues={this.state.newsToEdit}
-                    validationSchema={NewsSchema}
-                    onSubmit={(values,{ resetForm })=>{
-                       this.onEditBook({
-                        ...values,
-                        content: stateToHTML(this.state.editorState.getCurrentContent())
-                       })
-                    }}
-                >
-                    { ({ values, errors, touched, handleChange, handleBlur, handleSubmit })=>(
-                        <form onSubmit={handleSubmit}>
+            <Formik
+                enableReinitialize={true}
+                initialValues={this.state.newsToEdit}
+                validationSchema={NewsSchema}
+                onSubmit={(values,{ resetForm })=>{
+                    this.onEditNews({
+                    ...values,
+                    content: stateToHTML(this.state.editorState.getCurrentContent())
+                    })
+                }}
+            >
+                { ({ values, errors, touched, handleChange, handleBlur, handleSubmit })=>(
+                    <form onSubmit={handleSubmit}>
 
-                            <input
-                                type="hidden"
-                                name="_id"
-                                value={values ? values._id : ''}
-                            />
+                        <input
+                            type="hidden"
+                            name="_id"
+                            value={ values._id }
+                        />
 
-                            <FormElement
-                                elData={{element:'input',type:'text', value:values.name }}
-                                placeholder="The title of the News"
-                                name="name"
-                                onHandleChange={(e)=> handleChange(e)}
-                                onHandleBlur={(e)=> handleBlur(e)}
-                                errors={errors.name}
-                                touched={touched.name}
-                            />
+                        <FormElement
+                            elData={{element:'input',type:'text', value:values.name }}
+                            placeholder="The title of the News"
+                            name="name"
+                            onHandleChange={(e)=> handleChange(e)}
+                            onHandleBlur={(e)=> handleBlur(e)}
+                            errors={errors.name}
+                            touched={touched.name}
+                        />
 
-                            <Editor
-                                editorState={this.state.editorState}
-                                onEditorStateChange={this.onEditorStateChange}
-                                wrapperClassName="demo-wrapper"
-                                editorClassName="demo-editor"
-                            />
+                        <Editor
+                            editorState={this.state.editorState}
+                            onEditorStateChange={this.onEditorStateChange}
+                            wrapperClassName="demo-wrapper"
+                            editorClassName="demo-editor"
+                        />
 
-                            <h4>Book info</h4>
+                        <h4>News info</h4>
 
-                            <FormElement
-                                elData={{element:'input',type:'text', value:values.author }}
-                                placeholder="The author's name"
-                                name="author"
-                                onHandleChange={(e)=> handleChange(e)}
-                                onHandleBlur={(e)=> handleBlur(e)}
-                                errors={errors.author}
-                                touched={touched.author}
-                            />
+                        <FormElement
+                            elData={{element:'input',type:'text', value:values.author }}
+                            placeholder="The author's name"
+                            name="author"
+                            onHandleChange={(e)=> handleChange(e)}
+                            onHandleBlur={(e)=> handleBlur(e)}
+                            errors={errors.author}
+                            touched={touched.author}
+                        />
 
-                            <FormElement
-                                elData={{element:'input',type:'number', value:values.pages }}
-                                placeholder="How many pages"
-                                name="pages"
-                                onHandleChange={(e)=> handleChange(e)}
-                                onHandleBlur={(e)=> handleBlur(e)}
-                                errors={errors.pages}
-                                touched={touched.pages}
-                            />
+                        <FormElement
+                            elData={{element:'input',type:'number', value:values.pages }}
+                            placeholder="How many pages"
+                            name="pages"
+                            onHandleChange={(e)=> handleChange(e)}
+                            onHandleBlur={(e)=> handleBlur(e)}
+                            errors={errors.pages}
+                            touched={touched.pages}
+                        />
 
-                            <FormElement
-                                elData={{element:'select', value:values.rating }}
-                                name="rating"
-                                onHandleChange={(e)=> handleChange(e)}
-                                onHandleBlur={(e)=> handleBlur(e)}
-                                errors={errors.rating}
-                                touched={touched.rating}
-                            >
-                                <option default>Select a rating</option>
-                                <option value="1">1</option>
-                                <option value="2">2</option>
-                                <option value="3">3</option>
-                                <option value="4">4</option>
-                                <option value="5">5</option>
-                            </FormElement>
+                        <FormElement
+                            elData={{element:'select', value:values.rating }}
+                            name="rating"
+                            onHandleChange={(e)=> handleChange(e)}
+                            onHandleBlur={(e)=> handleBlur(e)}
+                            errors={errors.rating}
+                            touched={touched.rating}
+                        >
+                            <option default>Select a rating</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                        </FormElement>
 
-                            <FormElement
-                                elData={{element:'input',type:'number', value:values.price }}
-                                placeholder="What is the price ?"
-                                name="price"
-                                onHandleChange={(e)=> handleChange(e)}
-                                onHandleBlur={(e)=> handleBlur(e)}
-                                errors={errors.price}
-                                touched={touched.price}
-                            />
+                        <FormElement
+                            elData={{element:'input',type:'number', value:values.price }}
+                            placeholder="What is the price ?"
+                            name="price"
+                            onHandleChange={(e)=> handleChange(e)}
+                            onHandleBlur={(e)=> handleBlur(e)}
+                            errors={errors.price}
+                            touched={touched.price}
+                        />
 
-                            <button type="submit">
-                                Update News
-                            </button>
-                            <br/>
-                            {
-                                this.state.success ?
-                                <div className="succes_entry">
-                                    <div>Update completed !!!</div>
-                                    <Link to={`/article/${this.props.news.update.doc._id}`}>
-                                        See your News article
-                                    </Link>
-                                </div>
-                                :null
-                            }
-                        </form>
-                    )}
-                </Formik>
+                        <button type="submit">
+                            Update News
+                        </button>
+                        <br/>
+                        {
+                            this.state.success ?
+                            <div className="succes_entry">
+                                <div>Update completed !!!</div>
+                                <Link to={`/article/${this.props.news.update.doc._id}`}>
+                                    See your News article
+                                </Link>
+                            </div>
+                            :null
+                        }
+                    </form>
+                )}
+            </Formik>
 
-            </AdminLayout>
+        </AdminLayout>
     }
 }
 
-function mapStateToProps(state){
-    debugger;
+function mapStateToProps(state) {
     return {
         news: state.news
     }

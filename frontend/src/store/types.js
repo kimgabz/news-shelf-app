@@ -6,3 +6,4 @@ export const NEWS_ADD   = 'news_add';
 export const NEWS_CLEAR = 'news_clear';
 export const NEWS_GET   = 'news_get';
 export const NEWS_UPDATE = 'news_update';
+export const NEWS_GET_ALL = 'news_get_all';
